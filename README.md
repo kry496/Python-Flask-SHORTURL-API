@@ -1,5 +1,12 @@
 # Python-Flask-SHORTURL-API
 
+#ABOUT:
+
+    HTTP-based RESTful API for managing Short URLs and redirecting 
+    Generate Short URL from Long Url < 1:1 uniqueness is maintained>
+    Redirect when short URL is entered on the browser
+    
+
 #BREAKDOWN
     Maintain Idempotency for all requests.
     The SHORT URL and LONG URL have a 1:1 relationship.
