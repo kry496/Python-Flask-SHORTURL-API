@@ -14,7 +14,7 @@ def db_create():
     with sqlite3.connect('test3.db') as con:
         try:
             con.execute("pragma foreign_keys=ON") # Need to enable foreign key constraint per DB connection
-            con.execute("CREATE TABLE Test2table(ID INTEGER PRIMARY KEY, Longurl TEXT NOT NULL, Shorturl TEXT NOT NULL);")
+            con.execute("CREATE TABLE Table1(ID INTEGER PRIMARY KEY, Longurl TEXT NOT NULL, Shorturl TEXT NOT NULL);")
             con.execute("CREATE TABLE Table2(ID INTEGER PRIMARY KEY, Shortid INTEGER, Timestamp TEXT NOT NULL, FOREIGN KEY(Shortid) REFERENCES Test2table(ID));")
             con.commit()
             print "DB created"
@@ -27,7 +27,7 @@ def test_content(longurl):
     with sqlite3.connect('test3.db') as con:
         l = (longurl,) #Best practice to consolidate values in a tuple before passing it to database
         try:
-            res = con.execute("SELECT Shorturl FROM Test2table WHERE Longurl= ?", l)
+            res = con.execute("SELECT Shorturl FROM Table1 WHERE Longurl= ?", l)
             for x in res:
                 surl = x[0].decode('UTF-8')
         except OperationalError:
@@ -41,7 +41,7 @@ def write_content(longurl,shorturl='shorturl'):
         l = (longurl, shorturl)
         cur = con.cursor()
         try:
-            con.execute("INSERT INTO Test2table (LONGURL, SHORTURL) VALUES (?, ?)", l)
+            con.execute("INSERT INTO Table1 (LONGURL, SHORTURL) VALUES (?, ?)", l)
             con.commit()
         except OperationalError:
             print 'unable to insert the URL'
@@ -53,11 +53,11 @@ def read_content(longurl,shorturl):
         test =(shorturl,)
         cur = con.cursor()
         try:
-            res = con.execute("SELECT ID FROM Test2table WHERE SHORTURL= ?", test)
+            res = con.execute("SELECT ID FROM Table1 WHERE SHORTURL= ?", test)
             for x in res:
                 url = shrt.encode_url(x[0])
                 uurl = "".join([host,url])
-                cur.execute("UPDATE Test2table SET SHORTURL = ? WHERE ID = ?", (uurl, x[0]))
+                cur.execute("UPDATE Table1 SET SHORTURL = ? WHERE ID = ?", (uurl, x[0]))
                 con.commit()
         except OperationalError:
             print 'update of shorturl failed'
@@ -69,7 +69,7 @@ def read_all():
     with sqlite3.connect('test3.db') as con:
         con.execute("pragma foreign_keys=ON")
         try:
-            res = con.execute("SELECT * FROM Test2table")
+            res = con.execute("SELECT * FROM Table1")
             print 'table1'
             for x in res:
                 print x
@@ -159,7 +159,7 @@ def reroute_url(short_url):
     sl =(ss,)
     with sqlite3.connect('test3.db') as con:
         try:
-            res = con.execute("SELECT LONGURL FROM Test2table WHERE SHORTURL= ?", sl)
+            res = con.execute("SELECT LONGURL FROM Table1 WHERE SHORTURL= ?", sl)
             for x in res:
                 redirect_url = 'https://' + x[0].decode('UTF-8')
             add_hits(short_url)
