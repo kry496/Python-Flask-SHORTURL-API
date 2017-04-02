@@ -9,6 +9,7 @@
     
 
 #BREAKDOWN
+
     Maintain Idempotency for all requests.
     The SHORT URL and LONG URL have a 1:1 relationship.
     When a LONG URL is in the body of the POST request, the corresponding SHORT URL should be returned.
@@ -17,6 +18,7 @@
     Store data in a database to meet the persistence requirements.
 
 #SYSTEM COMPONENTS:
+
     One Ubuntu 16.04.1 LTS Virtual Machine with 8 GB of RAM.
     Python 2.7 (Virtual Environment).
     A lightweight Python web framework – FLASK.
